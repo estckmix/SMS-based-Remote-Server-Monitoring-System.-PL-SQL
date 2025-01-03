@@ -31,3 +31,18 @@ Database Tables:
 
     server_alert_logs:
         Records the alerts sent, with fields like alert_id, server_id, alert_message, alert_time.
+Scheduled Execution:
+
+To run this process periodically, create a scheduled job using Oracle Scheduler:
+BEGIN
+    DBMS_SCHEDULER.CREATE_JOB(
+        job_name        => 'SERVER_MONITOR_JOB',
+        job_type        => 'PLSQL_BLOCK',
+        job_action      => 'BEGIN sms_server_monitor.monitor_servers; END;',
+        start_date      => SYSTIMESTAMP,
+        repeat_interval => 'FREQ=MINUTELY; INTERVAL=5', -- Run every 5 minutes
+        enabled         => TRUE
+    );
+END;
+/
+This code is modular and can be extended to integrate with actual SMS gateways or more sophisticated monitoring mechanisms.
